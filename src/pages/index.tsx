@@ -1,7 +1,13 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
+import AppLayout from "@/components/AppLayout";
+import { useState } from "react";
 
 export default function Home() {
+  const [darkMode, setDarkMode] = useState(true);
+
+  const toggleDarkMode = () => {
+    setDarkMode((prevDarkMode) => !prevDarkMode);
+  };
   return (
     <>
       <Head>
@@ -10,7 +16,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main></main>
+      <main className={`${darkMode ? "" : "light"} bg-mainDark light:light`}>
+        <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      </main>
     </>
   );
 }

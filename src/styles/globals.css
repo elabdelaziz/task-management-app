@@ -1,1 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+.light {
+   @apply invert-[1] hue-rotate-[180deg];
+}
+
+/* *************************** */
+/* ********* layout ********** */
+/* *************************** */
+.page {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 96px auto;
+  grid-template-areas:
+    "logo logo nav nav nav nav nav nav nav nav"
+    "side side cont cont cont cont cont cont cont cont"
+}
+.logo {
+  grid-area: logo;
+}
+nav {
+  grid-area: nav;
+  outline: auto;
+}
+section {
+  grid-area: cont;
+  outline: auto;
+}
+aside {
+  grid-area: side;
+  outline: auto;
+}
