@@ -23,13 +23,41 @@
 }
 nav {
   grid-area: nav;
-  outline: auto;
 }
 section {
   grid-area: cont;
-  outline: auto;
+  /* outline: auto; */
 }
 aside {
   grid-area: side;
-  outline: auto;
 }
+
+/* ----------------- scrollbar --------------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(22, 29, 47);
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: rgb(90, 105, 143);
+    border-radius: 10px;
+    border: 3px none rgb(255, 255, 255);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}
+
+
+/* @media only screen and (max-width: 1271px) { */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+/* } */
