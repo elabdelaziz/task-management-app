@@ -1,8 +1,9 @@
 import BoardButton from "./BoardButton";
 import TodoColumn from "./columns/Column";
-import dataList from "data.json";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import NewColumn from "./columns/New";
+import { getLocalData, setActiveColumn } from "@/reducers/dataSlice";
+import { useTypedDispatch, useTypedSelector } from "@/hooks/useRedux";
 
 type AppLayoutProps = {
   darkMode: boolean;
@@ -10,10 +11,10 @@ type AppLayoutProps = {
 };
 
 export type AppData = {
-  boards?: {
+  data: {
     name: string;
     isActive: boolean;
-    columns?: {
+    columns: {
       name: string;
       tasks: {
         title: string;
@@ -29,23 +30,33 @@ export type AppData = {
 };
 
 const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
-  const [data, setData] = useState<AppData>({});
-  const [activeTitle, setActiveTitle] = useState("");
+  const dispatch = useTypedDispatch();
+  const {data} = useTypedSelector((state) => state.data);
+  const activeColIndex = useTypedSelector((state) => state.data.activeColIndex);
+
+  const activeColName = data.find((_item, i) => i === activeColIndex)?.name;
+  
 
   useEffect(() => {
-    if (data?.boards && activeTitle.length === 0) {
-      setActiveTitle(data.boards[0].name);
-    }
-  }, [data, activeTitle]);
+    const fetchData = async () => {
+      try {
+        const response = await import("data.json");
+        const data = response.boards;
+        dispatch(getLocalData(data));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchData();
+  }, []);
 
-  console.log(data.boards);
   useEffect(() => {
-    if (dataList.boards.length > 0) {
-      setData(dataList);
+    if (data.length > 0) {
+      const activeItem = data.find(item => item.isActive)
+      if (!activeItem) dispatch(setActiveColumn(0));
     }
-  }, [dataList]);
+  }, [data]);
 
-  // if (data?.boards) console.log(data?.boards[0]);
   return (
     // <button onClick={toggleDarkMode}>Toggle</button>
     <div className={`page bg-mainDark text-white`}>
@@ -54,7 +65,7 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
       </div>
       <nav className="min-w-[300px] flex items-center px-[2rem] justify-between border-b-[1px] border-b-borderMain">
         <h2 className="text-[clamp(1.2rem,3vw,1.5rem)] font-[700] ">
-          {activeTitle || ""}
+          {activeColName || ""}
         </h2>
         <div className="flex items-center">
           <button className="mr-[1rem] p-[0.7rem_1rem] rounded-[24px] bg-buttonsMain font-[500]">
@@ -67,14 +78,9 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
       </nav>
       <aside className="pt-[1rem] border-r-[1px] border-r-borderMain">
         <h3 className="pl-[2rem] mb-[1rem]">All Boards {"(3)"}</h3>
-        {data?.boards &&
-          data?.boards.map((item, i) => (
-            <BoardButton
-              key={i}
-              activeTitle={activeTitle}
-              setActiveTitle={setActiveTitle}
-              title={item.name}
-            />
+        {data &&
+          data.map((item, i) => (
+            <BoardButton key={i} boardIndex={i} title={item.name} />
           ))}
         <button className="text-buttonsMain px-[2rem] py-[0.8rem] mt-[10px] font-[500] flex items-center">
           <img className="mr-[1rem]" src="assets/icon-board.svg" />+ Create New
@@ -84,14 +90,14 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
       <section className={`bg-bgDark`}>
         <section className="bg-bgDark max-h-[calc(100vh-96px)] flex min-w-full min-h-full overflow-scroll left-[18.75rem] transition-[left_.2s_ease] cursor-move p-[1.5rem_2rem]">
           <>
-            {data?.boards &&
-              data?.boards.map((item) => {
-                if (activeTitle.length > 0) {
-                  if (item.name === activeTitle) {
-                    return item.columns?.map((col, i) => {
-                      return <TodoColumn column={col} index={i} />;
-                    });
-                  }
+            {data &&
+              data.map((item) => {
+                if (item.isActive) {
+                  return item.columns.map((col, i) => {
+                    return (
+                      <TodoColumn key={i} data={data} column={col} index={i} />
+                    );
+                  });
                 }
               })}
 

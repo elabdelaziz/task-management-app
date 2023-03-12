@@ -52,24 +52,3 @@ function App() {
     </div>
   );
 }
-
-// return
-//         (
-//   <div className "App">
-//     <div className-"widgets">
-//        <div
-//         className="widget"
-//          draggable
-//         onDragStart=((e) => handleOnDrag (e, "Widget A")}
-//         Widget A
-//       </div>
-//        <div
-//         className="widget"
-//          draggable
-//         onDragStart=((e) => handleOnDrag (e, "Widget B")}
-//         Widget В
-//       </div>
-//        <div
-//         className="widget"
-//         draggable
-//         onDragStart={(e) => handleOnDrag (e, "Widget C")}

@@ -1,23 +1,24 @@
 import { Dispatch, SetStateAction } from "react";
+import { useTypedDispatch } from "@/hooks/useRedux";
+import { setActiveColumn } from "@/reducers/dataSlice";
+import { useTypedSelector } from "@/hooks/useRedux";
 
 type BoardProps = {
   title: string;
-  isActive?: boolean;
-  activeTitle: string;
-  setActiveTitle: Dispatch<SetStateAction<string>>;
+  boardIndex: number;
+  // setActiveTitle: Dispatch<SetStateAction<string>>;
 };
 
-const BoardButton = ({
-  title,
-  isActive,
-  activeTitle,
-  setActiveTitle,
-}: BoardProps) => {
+const BoardButton = ({ title, boardIndex }: BoardProps) => {
+  const useSelector = useTypedSelector;
+  const dispatch = useTypedDispatch();
+
+  const activeCol = useSelector((state) => state.data.activeColIndex);
   return (
     <button
-      onClick={() => setActiveTitle(title)}
+      onClick={() => dispatch(setActiveColumn(boardIndex))}
       className={`${
-        activeTitle === title ? "bg-buttonsMain" : ""
+        activeCol === boardIndex ? "bg-buttonsMain" : ""
       } flex items-center mb-[0.2rem] px-[2rem] py-[0.8rem] w-[17rem] text-[16px] font-[500] rounded-r-[25px]`}
     >
       <img className="mr-[1rem]" src="assets/icon-board.svg"></img>

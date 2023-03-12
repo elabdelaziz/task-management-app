@@ -1,4 +1,6 @@
 import MainCard from "../MainCard";
+import { BoardsEntity, dragAndDrop } from "@/reducers/dataSlice";
+import { useTypedDispatch } from "../../hooks/useRedux";
 
 type TodoTypes = {
   column: {
@@ -12,9 +14,12 @@ type TodoTypes = {
     }[];
   };
   index: number;
+  data: BoardsEntity[];
 };
 
-const TodoColumn = ({ column, index }: TodoTypes) => {
+const TodoColumn = ({ column, index, data }: TodoTypes) => {
+  const dispatch = useTypedDispatch();
+
   const handleBgColor = () => {
     return index === 0
       ? "bg-[#49C4E5]"
@@ -22,8 +27,24 @@ const TodoColumn = ({ column, index }: TodoTypes) => {
       ? "bg-[#8471F2]"
       : "bg-[#67E2AE]";
   };
+
+  function handleOnDrop(e: React.DragEvent) {
+    const { prevColIndex, taskIndex } = JSON.parse(
+      e.dataTransfer.getData("text")
+    );
+    dispatch(dragAndDrop({ colIndex: index, prevColIndex, taskIndex }));
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+  }
+
   return (
-    <div className="flex w-[17.5rem] mr-[2rem] h-[100%] flex-col">
+    <div
+      onDrop={handleOnDrop}
+      onDragOver={handleDragOver}
+      className="flex w-[17.5rem] mr-[2rem] h-[100%] min-h-[100vh] flex-col"
+    >
       <>
         <div className="flex items-center w-[17.5rem] text-[#828fa3] mb-[1.5rem] leading-[2.4px] font-[500] uppercase">
           <span
@@ -32,8 +53,14 @@ const TodoColumn = ({ column, index }: TodoTypes) => {
           {column.name}
         </div>
         {column.tasks &&
-          column.tasks.map((task) => (
-            <MainCard title={task.title} sub={task.subtasks} />
+          column.tasks.map((task, taskIndex) => (
+            <MainCard
+              key={taskIndex}
+              title={task.title}
+              taskIndex={taskIndex}
+              colIndex={index}
+              sub={task.subtasks}
+            />
           ))}
       </>
     </div>
