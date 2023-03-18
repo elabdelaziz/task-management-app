@@ -6,14 +6,14 @@ export const onGetLocalData = (state: DataState, action: AnyAction) => {
 };
 
 export const onDragAndDrop = (state: DataState, action: AnyAction) => {
-  const { colIndex, prevColIndex, taskIndex } = action.payload;
+  const { colIndex, prevColIndex, taskIndex, droppableAreaIndex } = action.payload;
   const board = state.data.find((board) => board.isActive);
   const prevCol = board!.columns.find((_col, i) => i === prevColIndex);
   const task = prevCol!.tasks.splice(taskIndex, 1)[0];
   const dropBoard = board!.columns.find((_col, i) => i === colIndex);
-  if (dropBoard) {
-    console.log(dropBoard);
-    dropBoard.tasks.push(task);
+
+  if (dropBoard && task) {
+    dropBoard.tasks.splice(droppableAreaIndex, 0, task)
   }
 };
 

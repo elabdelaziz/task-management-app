@@ -15,12 +15,14 @@ export interface BoardsEntity {
   columns: ColumnsEntity[];
 }
 export interface ColumnsEntity {
+  id: number;
   name: string;
   tasks: TasksEntity[];
 }
 export interface TasksEntity {
   title: string;
   description: string;
+  id: number;
   status: string;
   subtasks: SubtasksEntity[];
 }

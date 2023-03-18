@@ -1,12 +1,14 @@
 import MainCard from "../MainCard";
 import { BoardsEntity, dragAndDrop } from "@/reducers/dataSlice";
 import { useTypedDispatch } from "../../hooks/useRedux";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 type TodoTypes = {
   column: {
     name: string;
     tasks: {
       title: string;
+      id?: number;
       subtasks: {
         title: string;
         isCompleted: boolean;
@@ -40,11 +42,7 @@ const TodoColumn = ({ column, index, data }: TodoTypes) => {
   }
 
   return (
-    <div
-      onDrop={handleOnDrop}
-      onDragOver={handleDragOver}
-      className="flex w-[17.5rem] mr-[2rem] h-[100%] min-h-[100vh] flex-col"
-    >
+    <div className="flex w-[17.5rem] mr-[2rem] h-[100%] min-h-[calc(100%+8rem)] w-[17.5rem] flex-col">
       <>
         <div className="flex items-center w-[17.5rem] text-[#828fa3] mb-[1.5rem] leading-[2.4px] font-[500] uppercase">
           <span
@@ -52,16 +50,35 @@ const TodoColumn = ({ column, index, data }: TodoTypes) => {
           ></span>
           {column.name}
         </div>
-        {column.tasks &&
-          column.tasks.map((task, taskIndex) => (
-            <MainCard
-              key={taskIndex}
-              title={task.title}
-              taskIndex={taskIndex}
-              colIndex={index}
-              sub={task.subtasks}
-            />
-          ))}
+        <Droppable droppableId={index.toString()}>
+          {(droppableProvided, droppableSnapshot) => (
+            <div
+              className="min-h-[calc(100vh+2rem)]"
+              ref={droppableProvided.innerRef}
+              {...droppableProvided.droppableProps}
+            >
+              {column?.tasks &&
+                column.tasks.map((task, taskIndex) => (
+                  <Draggable
+                    key={taskIndex}
+                    draggableId={task?.id?.toString() || taskIndex.toString()}
+                    index={taskIndex}
+                  >
+                    {(draggableProvided, draggableSnapshot) => (
+                      <MainCard
+                        key={taskIndex}
+                        title={task?.title}
+                        taskIndex={taskIndex}
+                        colIndex={index}
+                        sub={task?.subtasks}
+                        provided={draggableProvided}
+                      />
+                    )}
+                  </Draggable>
+                ))}
+            </div>
+          )}
+        </Droppable>
       </>
     </div>
   );
