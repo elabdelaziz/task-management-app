@@ -1,10 +1,15 @@
-import { Dispatch, SetStateAction } from "react";
+import { useTypedDispatch } from "@/hooks/useRedux";
+import { addNewColumn } from "@/reducers/dataSlice";
+import { Dispatch, SetStateAction, useState } from "react";
 
 type EditBoardProps = {
   setShowNewColumnModal: Dispatch<SetStateAction<boolean>>;
 };
 
 const NewColumnModal = ({ setShowNewColumnModal }: EditBoardProps) => {
+  const [value, setValue] = useState("");
+  const dispatch = useTypedDispatch();
+
   return (
     <>
       <div
@@ -22,37 +27,14 @@ const NewColumnModal = ({ setShowNewColumnModal }: EditBoardProps) => {
                 placeholder="Ex. Platform Launch"
                 className="bg-transparent text-[0.8125rem] p-[0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
                 id="editname"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
               />
             </div>
-            <label htmlFor="subtasks">Columns</label>
-            <div className="flex items-center mb-[1rem]">
-              <input
-                placeholder="Todo"
-                className="bg-transparent flex-1 text-[0.8125rem] p-[0.5rem_0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
-                id="subtasks"
-              />
-              <button className="ml-[1rem] text-[22px] opacity-[0.5]">x</button>
-            </div>
-            <div className="flex items-center mb-[1rem]">
-              <input
-                placeholder="Doing"
-                className="bg-transparent flex-1 text-[0.8125rem] p-[0.5rem_0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
-                id="subtasks"
-              />
-              <button className="ml-[1rem] text-[22px] opacity-[0.5]">x</button>
-            </div>
-            <div className="flex items-center mb-[1rem]">
-              <input
-                placeholder="Done"
-                className="bg-transparent flex-1 text-[0.8125rem] p-[0.5rem_0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
-                id="subtasks"
-              />
-              <button className="ml-[1rem] text-[22px] opacity-[0.5]">x</button>
-            </div>
-            <button className="mt-[1rem] rounded-[20px] text-mainText bg-white text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]">
-              Add New Column
-            </button>
-            <button className="mt-[1rem] rounded-[20px] bg-mainText text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]">
+            <button
+              onClick={() => dispatch(addNewColumn({ title: value }))}
+              className="mt-[1rem] rounded-[20px] bg-mainText text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
+            >
               Save Changes
             </button>
           </div>

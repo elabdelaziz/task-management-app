@@ -1,8 +1,21 @@
 import { Dispatch, SetStateAction } from "react";
+import { useTypedDispatch } from "@/hooks/useRedux";
+import { deleteBoard } from "@/reducers/dataSlice";
 type DeleteProps = {
   setShowDelete: Dispatch<SetStateAction<boolean>>;
+  setEditMode: Dispatch<SetStateAction<boolean>>;
 };
-const DeleteBoardConfirmation = ({ setShowDelete }: DeleteProps) => {
+const DeleteBoardConfirmation = ({
+  setShowDelete,
+  setEditMode,
+}: DeleteProps) => {
+  const dispatch = useTypedDispatch();
+
+  const handleDelete = () => {
+    dispatch(deleteBoard(""));
+    setShowDelete(false);
+    setEditMode(false);
+  };
   return (
     <>
       <div
@@ -19,7 +32,12 @@ const DeleteBoardConfirmation = ({ setShowDelete }: DeleteProps) => {
             action will remove all columns and tasks and cannot be reversed.
           </p>
           <div className="flex mt-[1.5rem]">
-            <button className="button mr-[1rem] bg-[#ea5555]">Delete</button>
+            <button
+              onClick={handleDelete}
+              className="button mr-[1rem] bg-[#ea5555]"
+            >
+              Delete
+            </button>
             <button onClick={() => setShowDelete(false)} className="button">
               Cancel
             </button>

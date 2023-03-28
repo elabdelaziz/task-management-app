@@ -2,7 +2,12 @@ import BoardButton from "./BoardButton";
 import TodoColumn from "./columns/Column";
 import { useEffect, useState } from "react";
 import NewColumn from "./columns/New";
-import { dragAndDrop, getLocalData, setActiveColumn } from "@/reducers/dataSlice";
+import {
+  dragAndDrop,
+  getLocalData,
+  setActiveColumn,
+  TasksEntity,
+} from "@/reducers/dataSlice";
 import { useTypedDispatch, useTypedSelector } from "@/hooks/useRedux";
 import { DragDropContext, resetServerContext } from "@hello-pangea/dnd";
 import NewTaskModal from "./NewTask";
@@ -10,6 +15,7 @@ import NewBoardModal from "./NewBoardModal";
 import EditBoardModal from "./EditBoardModal";
 import DeleteBoardConfirmation from "./DeleteBoardConfirmation";
 import NewColumnModal from "./NewColumnModal";
+import TaskModal from "./TaskModal";
 
 type AppLayoutProps = {
   darkMode: boolean;
@@ -37,7 +43,7 @@ export type AppData = {
 
 const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
   const dispatch = useTypedDispatch();
-  const {data} = useTypedSelector((state) => state.data);
+  const { data } = useTypedSelector((state) => state.data);
   const activeColIndex = useTypedSelector((state) => state.data.activeColIndex);
   const activeColName = data.find((_item, i) => i === activeColIndex)?.name;
 
@@ -48,8 +54,14 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
   const [showEditBoard, setShowEditBoard] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showNewColumnModal, setShowNewColumnModal] = useState(false);
-  
-  console.log(newTaskMode);
+  const [renderTaskModal, setRenderTaskModal] = useState<TasksEntity | null>(
+    null
+  );
+
+  const activeBoard = data.find((item) => item.isActive) || null;
+
+  console.log(renderTaskModal);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,19 +77,21 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
 
   useEffect(() => {
     if (data.length > 0) {
-      const activeItem = data.find(item => item.isActive)
+      const activeItem = data.find((item) => item.isActive);
       if (!activeItem) dispatch(setActiveColumn(0));
     }
   }, [data]);
 
   const onDragEnd = (result: any) => {
     const { destination, source } = result;
-    console.log("source", source)
-    console.log("destination", destination)
     //unknown position
     if (!destination) return;
     //same position
-    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
     dispatch(
       dragAndDrop({
         colIndex: Number(destination.droppableId),
@@ -87,6 +101,15 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
       })
     );
   };
+
+  function getRandomHexColor() {
+    const hexLetters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += hexLetters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
 
   return (
     // <button onClick={toggleDarkMode}>Toggle</button>
@@ -116,7 +139,7 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
                 src="/assets/icon-vertical-ellipsis.svg"
               />
               {editMode && (
-                <div className="absolute top-[65px] min-w-[10rem] right-0 whitespace-nowrap flex flex-col items-start rounded-[10px] p-[1rem] bg-mainDark w-fit h-fit">
+                <div className="absolute [&>button]:w-full [&>button]:text-left top-[65px] min-w-[10rem] right-0 whitespace-nowrap flex flex-col items-start rounded-[10px] p-[1rem] bg-mainDark w-fit h-fit">
                   <button
                     onClick={() => setShowEditBoard(true)}
                     className="opacity-[0.5] mb-[10px]"
@@ -181,13 +204,14 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
                 {data &&
                   data.map((item) => {
                     if (item.isActive) {
-                      return item.columns.map((col, i) => {
+                      return item?.columns?.map((col, i) => {
                         return (
                           <TodoColumn
                             key={i}
                             data={data}
                             column={col}
                             index={i}
+                            setRenderTaskModal={setRenderTaskModal}
                           />
                         );
                       });
@@ -198,18 +222,36 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
             </>
           </section>
         </section>
-        {newTaskMode && <NewTaskModal setNewTaskMode={setNewTaskMode} />}
+        {newTaskMode && (
+          <NewTaskModal
+            activeBoard={activeBoard}
+            setNewTaskMode={setNewTaskMode}
+          />
+        )}
         {showNewBoardModal && (
           <NewBoardModal setShowNewBoardModal={setShowNewBoardModal} />
         )}
         {showEditBoard && (
-          <EditBoardModal setShowEditBoard={setShowEditBoard} />
+          <EditBoardModal
+            activeBoard={activeBoard}
+            setShowEditBoard={setShowEditBoard}
+          />
         )}
         {showDelete && (
-          <DeleteBoardConfirmation setShowDelete={setShowDelete} />
+          <DeleteBoardConfirmation
+            setShowDelete={setShowDelete}
+            setEditMode={setEditMode}
+          />
         )}
         {showNewColumnModal && (
           <NewColumnModal setShowNewColumnModal={setShowNewColumnModal} />
+        )}
+        {renderTaskModal !== null && (
+          <TaskModal
+            activeBoard={activeBoard}
+            task={renderTaskModal}
+            setShowTaskModal={setRenderTaskModal}
+          />
         )}
       </div>
     </>

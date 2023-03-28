@@ -2,6 +2,11 @@ import {
   onGetLocalData,
   onDragAndDrop,
   onSetActiveColumn,
+  onEditBoard,
+  onDeleteBoard,
+  onAddTask,
+  onAddNewColumn,
+  onAddNewBoard,
 } from "@/actions/dataSliceActions";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -15,14 +20,14 @@ export interface BoardsEntity {
   columns: ColumnsEntity[];
 }
 export interface ColumnsEntity {
-  id: number;
+  id: any;
   name: string;
   tasks: TasksEntity[];
 }
 export interface TasksEntity {
   title: string;
   description: string;
-  id: number;
+  id: any;
   status: string;
   subtasks: SubtasksEntity[];
 }
@@ -46,9 +51,23 @@ export const dataSlice = createSlice({
       const activeColumn = onSetActiveColumn(state, action);
       state.activeColIndex = activeColumn;
     },
+    editBoard: (state, action) => onEditBoard(state, action),
+    deleteBoard: (state, action) => onDeleteBoard(state, action),
+    addTask: (state, action) => onAddTask(state, action),
+    addNewColumn: (state, action) => onAddNewColumn(state, action),
+    addNewBoard: (state, action) => onAddNewBoard(state, action),
   },
 });
 
-export const { getLocalData, dragAndDrop, setActiveColumn } = dataSlice.actions;
+export const {
+  getLocalData,
+  dragAndDrop,
+  setActiveColumn,
+  editBoard,
+  deleteBoard,
+  addTask,
+  addNewColumn,
+  addNewBoard,
+} = dataSlice.actions;
 
 export default dataSlice.reducer;
