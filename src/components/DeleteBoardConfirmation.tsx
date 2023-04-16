@@ -1,13 +1,15 @@
 import { Dispatch, SetStateAction } from "react";
 import { useTypedDispatch } from "@/hooks/useRedux";
-import { deleteBoard } from "@/reducers/dataSlice";
+import { BoardsEntity, deleteBoard } from "@/reducers/dataSlice";
 type DeleteProps = {
   setShowDelete: Dispatch<SetStateAction<boolean>>;
   setEditMode: Dispatch<SetStateAction<boolean>>;
+  activeBoard: BoardsEntity | null;
 };
 const DeleteBoardConfirmation = ({
   setShowDelete,
   setEditMode,
+  activeBoard,
 }: DeleteProps) => {
   const dispatch = useTypedDispatch();
 
@@ -28,8 +30,9 @@ const DeleteBoardConfirmation = ({
             Delete This Board?
           </h2>
           <p className="text-[.8125rem] text-[14px] text-[#828fa3] leading-[23px]">
-            Are you sure you want to delete the 'Platform Launch' board? This
-            action will remove all columns and tasks and cannot be reversed.
+            Are you sure you want to delete the &apos;{activeBoard?.name}&apos;
+            board? This action will remove all columns and tasks and cannot be
+            reversed.
           </p>
           <div className="flex mt-[1.5rem]">
             <button

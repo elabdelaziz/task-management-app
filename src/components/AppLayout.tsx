@@ -278,6 +278,7 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
           <DeleteBoardConfirmation
             setShowDelete={setShowDelete}
             setEditMode={setEditMode}
+            activeBoard={activeBoard}
           />
         )}
         {showNewColumnModal && (
