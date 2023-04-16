@@ -33,7 +33,7 @@ const MainCard = ({
         onClick={() => setRenderTaskModal(task)}
         draggable
         // onDragStart={(e) => handleOnDrag(e, "widget B")}
-        className="flex flex-col last:mb-[8rem] text-left w-full max-w-[17.5rem] min-h-[5.5rem] [&_p]:word-break p-[1.5rem_1rem] rounded-[8px] shadow-[0_4px_6px_#364e7e1a] mb-[1.5rem] bg-mainDark min-h-[5.5rem] transition-[filter_.2s_ease] cursor-grab"
+        className="flex flex-col last:mb-[8rem] text-left w-full max-w-[17.5rem] min-h-[5.5rem] [&_p]:word-break p-[1.5rem_1rem] rounded-[8px] shadow-[0_4px_6px_#364e7e1a] mb-[1.5rem] bg-white dark:bg-mainDark min-h-[5.5rem] transition-[filter_.2s_ease] cursor-grab"
         ref={provided.innerRef}
         {...provided.draggableProps}
         {...provided.dragHandleProps}

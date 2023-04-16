@@ -23,7 +23,7 @@ const DeleteBoardConfirmation = ({
         className="absolute z-[3] overlay w-[100vw] h-[100vh] bg-black bg-opacity-[0.5]"
       ></div>
       <div className="absolute flex items-center justify-center w-[100vw] h-[100vh]">
-        <div className="rounded-[10px] z-[4] flex flex-col [&>div]:mb-[1rem] [&>div>label]:mb-[0.5rem] p-[2rem] bg-mainDark w-[100%] max-w-[30rem] max-h-[60rem] h-[fit]">
+        <div className="rounded-[10px] z-[4] flex flex-col [&>div]:mb-[1rem] [&>div>label]:mb-[0.5rem] p-[2rem] bg-white dark:bg-mainDark w-[100%] max-w-[30rem] max-h-[60rem] h-[fit]">
           <h2 className="text-[#ea5555] mb-[1rem] font-[700] text-[18px]">
             Delete This Board?
           </h2>

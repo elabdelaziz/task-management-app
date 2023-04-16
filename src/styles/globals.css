@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.light {
-   @apply invert-[1] hue-rotate-[180deg];
-}
-
 /* *************************** */
 /* ********* layout ********** */
 /* *************************** */
@@ -64,17 +60,17 @@ aside {
 
 .card {
   display: flex;
-    text-align: left;
-    flex-direction: column;
-    width: 100%;
-    min-height: 5.5rem;
-    background: var(--color-main);
-    border: 1px solid rgba(134,134,134,.1);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px #364e7e1a;
-    padding: 1.5rem 1rem;
-    margin-bottom: 1.5rem;
-    transition: filter .2s ease;
+  text-align: left;
+  flex-direction: column;
+  width: 100%;
+  min-height: 5.5rem;
+  background: var(--color-main);
+  border: 1px solid rgba(134,134,134,.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px #364e7e1a;
+  padding: 1.5rem 1rem;
+  margin-bottom: 1.5rem;
+  transition: filter .2s ease;
 }
 
 .sideBarHidden {

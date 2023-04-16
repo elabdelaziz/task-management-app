@@ -16,6 +16,9 @@ import EditBoardModal from "./EditBoardModal";
 import DeleteBoardConfirmation from "./DeleteBoardConfirmation";
 import NewColumnModal from "./NewColumnModal";
 import TaskModal from "./TaskModal";
+import ThemeSwitch from "./ThemeSwitch";
+import useIsMobile from "@/hooks/useIsMobile";
+import BoardsMobile from "./BoardsMobile";
 
 type AppLayoutProps = {
   darkMode: boolean;
@@ -43,6 +46,7 @@ export type AppData = {
 
 const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
   const dispatch = useTypedDispatch();
+  const isMobile = useIsMobile();
   const { data } = useTypedSelector((state) => state.data);
   const activeColIndex = useTypedSelector((state) => state.data.activeColIndex);
   const activeColName = data.find((_item, i) => i === activeColIndex)?.name;
@@ -54,13 +58,12 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
   const [showEditBoard, setShowEditBoard] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showNewColumnModal, setShowNewColumnModal] = useState(false);
+  const [showBoardsMobile, setShowBoardsMobile] = useState(false);
   const [renderTaskModal, setRenderTaskModal] = useState<TasksEntity | null>(
     null
   );
 
   const activeBoard = data.find((item) => item.isActive) || null;
-
-  console.log(renderTaskModal);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,6 +84,12 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
       if (!activeItem) dispatch(setActiveColumn(0));
     }
   }, [data]);
+
+  useEffect(() => {
+    if (isMobile) {
+      setSideBarHidden(true);
+    }
+  });
 
   const onDragEnd = (result: any) => {
     const { destination, source } = result;
@@ -116,22 +125,36 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
     <>
       <div
         className={`page ${
-          sideBarHidden && "sideBarHidden"
-        } transition-[transform_.2s_ease] bg-mainDark text-white`}
+          (isMobile || sideBarHidden) && "sideBarHidden"
+        } transition-[transform_.2s_ease] bg-white dark:bg-mainDark dark:text-white`}
       >
-        <div className="logo min-w-[300px] flex items-center pl-[2rem] border-r-[1px] border-b-[1px] border-b-borderMain border-r-borderMain">
-          <img className="" src="assets/logo-light.svg"></img>
+        <div className="logo md:min-w-[300px] flex items-center pl-[2rem] border-r-[1px] border-b-[1px] border-b-borderMainWhite dark:border-b-borderMain border-r-borderMainWhite dark:border-r-borderMain">
+          {darkMode && !isMobile && (
+            <img src="assets/logo-light.svg" alt="logo"></img>
+          )}
+          {!darkMode && !isMobile && (
+            <img src="assets/logo-dark.svg" alt="logo"></img>
+          )}
+          {isMobile && <img src="assets/logo-mobile.svg" alt="logo"></img>}
         </div>
-        <nav className="min-w-[300px] flex items-center px-[2rem] justify-between border-b-[1px] border-b-borderMain">
-          <h2 className="text-[clamp(1.2rem,3vw,1.5rem)] font-[700] ">
+        <nav className="min-w-[300px] flex items-center px-[2rem] justify-between border-b-[1px] border-b-borderMainWhite dark:border-b-borderMain">
+          <h2 className="text-[clamp(1.2rem,3vw,1.5rem)] flex items-center whitespace-nowrap font-[700] ">
             {activeColName || ""}
+            {isMobile && (
+              <img
+                onClick={() => setShowBoardsMobile(true)}
+                className="h-[8px] ml-[0.5rem]"
+                src="/assets/icon-chevron-down.svg"
+                alt="icon"
+              />
+            )}
           </h2>
           <div className="flex items-center">
             <button
               onClick={() => setNewTaskMode(true)}
-              className="mr-[1rem] p-[0.7rem_1rem] rounded-[24px] bg-buttonsMain font-[500]"
+              className="mr-[1rem] p-[0.7rem_1rem] text-white rounded-[24px] bg-buttonsMain font-[500]"
             >
-              + Add New Task
+              + {!isMobile && "Add New Task"}
             </button>
             <i className="relative cursor-pointer">
               <img
@@ -139,7 +162,7 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
                 src="/assets/icon-vertical-ellipsis.svg"
               />
               {editMode && (
-                <div className="absolute [&>button]:w-full [&>button]:text-left top-[65px] min-w-[10rem] right-0 whitespace-nowrap flex flex-col items-start rounded-[10px] p-[1rem] bg-mainDark w-fit h-fit">
+                <div className="absolute [&>button]:w-full [&>button]:text-left top-[65px] min-w-[10rem] right-0 whitespace-nowrap flex flex-col items-start rounded-[10px] p-[1rem] bg-white dark:bg-mainDark w-fit h-fit">
                   <button
                     onClick={() => setShowEditBoard(true)}
                     className="opacity-[0.5] mb-[10px]"
@@ -158,7 +181,7 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
           </div>
         </nav>
         {!sideBarHidden && (
-          <aside className="pt-[1rem] transition-[transform_.2s_ease] border-r-[1px] border-r-borderMain">
+          <aside className="hidden md:block pt-[1rem] transition-[transform_.2s_ease] border-r-[1px] border-r-borderMainWhite dark:border-r-borderMain">
             <div className="flex flex-col h-full justify-between">
               <div>
                 <h3 className="pl-[2rem] mb-[1rem]">All Boards {"(3)"}</h3>
@@ -174,10 +197,21 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
                   Create New Board
                 </button>
               </div>
-              <div className="mb-[3rem] pl-[2rem]">
+              <div className="mb-[3rem]">
+                <div className="mb-[2rem] h-[48px] rounded-[6px] mx-[2rem] my-[1rem] bg-bgWhite dark:bg-bgDark flex items-center justify-around">
+                  <img
+                    className="w-[20px] h-[20px]"
+                    src="/assets/icon-light-theme.svg"
+                  />
+                  <ThemeSwitch isDark={darkMode} onToggle={toggleDarkMode} />
+                  <img
+                    className="w-[20px] h-[20px]"
+                    src="/assets/icon-dark-theme.svg"
+                  />
+                </div>
                 <div
                   onClick={() => setSideBarHidden(true)}
-                  className="opacity-[0.5] cursor-pointer flex items-center before:content-[''] before:mr-[10px] before:bg-no-repeat before:bg-center before:bg-contain before:bg-[url('/assets/icon-hide-sidebar.svg')] before:block before:w-[16px] before:h-[16px]"
+                  className="opacity-[0.5] pl-[2rem] cursor-pointer flex items-center before:content-[''] before:mr-[10px] before:bg-no-repeat before:bg-center before:bg-contain before:bg-[url('/assets/icon-hide-sidebar.svg')] before:block before:w-[16px] before:h-[16px]"
                 >
                   Hide Sidebar
                 </div>
@@ -185,7 +219,7 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
             </div>
           </aside>
         )}
-        {sideBarHidden && (
+        {sideBarHidden && !isMobile && (
           <div
             onClick={() => setSideBarHidden(false)}
             className="fixed cursor-pointer flex items-center justify-center left-0 bottom-[2rem] w-[3.5rem] h-[3rem] bg-[#635FC7] rounded-[0_25px_25px_0] animation-[fadeIn_.3s_ease-in] transition-[background-color_.2s_ease]"
@@ -193,11 +227,14 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
             <img src="/assets/icon-show-sidebar.svg" />
           </div>
         )}
-        <section onClick={() => setEditMode(false)} className={`bg-bgDark`}>
+        <section
+          onClick={() => setEditMode(false)}
+          className={`bg-bgWhite dark:bg-bgDark`}
+        >
           <section
             className={`${
               sideBarHidden && "[&>*]:flex-1"
-            } bg-bgDark max-h-[calc(100vh-96px)] flex min-w-full min-h-full overflow-scroll left-[18.75rem] transition-[left_.2s_ease] cursor-move p-[1.5rem_2rem]`}
+            } bg-bgWhite dark:bg-bgDark max-h-[calc(100vh-96px)] flex min-w-full min-h-full overflow-scroll left-[18.75rem] transition-[left_.2s_ease] cursor-move p-[1.5rem_2rem]`}
           >
             <>
               <DragDropContext onDragEnd={onDragEnd}>
@@ -251,6 +288,16 @@ const AppLayout = ({ darkMode, toggleDarkMode }: AppLayoutProps) => {
             activeBoard={activeBoard}
             task={renderTaskModal}
             setShowTaskModal={setRenderTaskModal}
+          />
+        )}
+        {showBoardsMobile && isMobile && (
+          <BoardsMobile
+            data={data}
+            darkMode={darkMode}
+            toggleDarkMode={toggleDarkMode}
+            setShowNewBoardModal={setShowNewBoardModal}
+            setSideBarHidden={setSideBarHidden}
+            setShowBoardsMobile={setShowBoardsMobile}
           />
         )}
       </div>

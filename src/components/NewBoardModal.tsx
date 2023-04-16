@@ -62,11 +62,11 @@ const NewBoardModal = ({ setShowNewBoardModal }: BoardProps) => {
         onSubmit={handleSubmit(onSubmit)}
         className="absolute flex items-center justify-center w-[100vw] h-[100vh]"
       >
-        <div className="rounded-[10px] z-[4] flex flex-col [&>div]:mb-[1rem] [&>div>label]:mb-[0.5rem] p-[2rem] bg-mainDark w-[100%] max-w-[30rem] max-h-[60rem] h-[fit]">
+        <div className="rounded-[10px] z-[4] flex flex-col [&>div]:mb-[1rem] [&>div>label]:mb-[0.5rem] p-[2rem] bg-white dark:bg-mainDark w-[100%] max-w-[30rem] max-h-[60rem] h-[fit]">
           <div className="flex flex-col">
             <label htmlFor="name">Name</label>
             <input
-              className="bg-transparent text-[0.8125rem] p-[1rem_0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
+              className="bg-transparent text-[0.8125rem] p-[0.7rem_0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
               id="name"
               {...register("name", {
                 // validate: (value) => isDuplicatedName(value),
@@ -80,7 +80,7 @@ const NewBoardModal = ({ setShowNewBoardModal }: BoardProps) => {
               <input
                 key={i}
                 defaultValue={col.name}
-                className="bg-transparent mb-[1rem] text-[0.8125rem] p-[1rem_0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
+                className="bg-transparent mb-[1rem] text-[0.8125rem] p-[0.7rem_0.5rem] rounded-[4px] border-[1px] border-solid border-inputBorder transition-[border_.2s_ease]"
                 id="col"
                 {...register(`columns.${i}.name`, {
                   // validate: (value) => isDuplicatedName(value),
@@ -91,13 +91,13 @@ const NewBoardModal = ({ setShowNewBoardModal }: BoardProps) => {
           </div>
           <button
             onClick={handleAddNewColumn}
-            className="mt-[1rem] rounded-[20px] text-mainText bg-white text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
+            className="mt-[1rem] rounded-[20px] text-mainText bg-[#f0effa] dark:bg-white text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
           >
-            Add New Column
+            + Add New Column
           </button>
           <button
             type="submit"
-            className="mt-[1rem] rounded-[20px] bg-mainText text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
+            className="mt-[1rem] text-white rounded-[20px] bg-mainText text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
           >
             Create New Board
           </button>

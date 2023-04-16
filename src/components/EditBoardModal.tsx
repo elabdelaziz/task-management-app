@@ -63,7 +63,7 @@ const EditBoardModal = ({ setShowEditBoard, activeBoard }: EditBoardProps) => {
         onSubmit={handleSubmit(onSubmit)}
         className="absolute flex items-center justify-center w-[100vw] h-[100vh]"
       >
-        <div className="rounded-[10px] z-[4] flex flex-col [&>div]:mb-[1rem] [&>div>label]:mb-[0.5rem] p-[2rem] bg-mainDark w-[100%] max-w-[30rem] max-h-[60rem] h-[fit]">
+        <div className="rounded-[10px] z-[4] flex flex-col [&>div]:mb-[1rem] [&>div>label]:mb-[0.5rem] p-[2rem] bg-white dark:bg-mainDark w-[100%] max-w-[30rem] max-h-[60rem] h-[fit]">
           <div className="flex flex-col">
             <div className="flex flex-col mb-[1rem]">
               <label className="mb-[0.5rem]" htmlFor="editname">
@@ -117,13 +117,13 @@ const EditBoardModal = ({ setShowEditBoard, activeBoard }: EditBoardProps) => {
             </div> */}
             <button
               onClick={handleAddNewColumn}
-              className="mt-[1rem] rounded-[20px] text-mainText bg-white text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
+              className="mt-[1rem] rounded-[20px] text-mainText bg-[#f0effa] dark:bg-white text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
             >
-              Add New Column
+              + Add New Column
             </button>
             <button
               type="submit"
-              className="mt-[1rem] rounded-[20px] bg-mainText text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
+              className="mt-[1rem] rounded-[20px] text-white bg-mainText text-[.8125rem] p-[0.5rem_1rem] h-auto font-[700] transition-[all_.2s_ease]"
             >
               Save Changes
             </button>
